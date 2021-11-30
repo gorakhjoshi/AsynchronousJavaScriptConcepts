@@ -28,22 +28,26 @@ const renderError = function (msg) {
 };
 
 const getCountryData = async function (country) {
-  const resCountry = await fetch(
-    `https://restcountries.com/v2/name/${country}`
-  );
-  const data = await resCountry.json();
-  renderCountry(data[0]);
+  try {
+    const resCountry = await fetch(
+      `https://restcountries.com/v2/name/${country}`
+    );
+    const data = await resCountry.json();
+    renderCountry(data[0]);
 
-  const neighbour = data[0].borders[0];
+    const neighbour = data[0].borders[0];
 
-  if (!neighbour) return;
+    if (!neighbour) return 'No neighbour found';
 
-  const resNeighbour = await fetch(
-    `https://restcountries.com/v2/alpha/${neighbour}`
-  );
-  renderCountry(await resNeighbour.json(), 'neighbour');
+    const resNeighbour = await fetch(
+      `https://restcountries.com/v2/alpha/${neighbour}`
+    );
+    renderCountry(await resNeighbour.json(), 'neighbour');
+
+    return `Successfully fetched data of ${country}`;
+  } catch (error) {
+    console.log('ERROR');
+  }
 };
 
-btn.addEventListener('click', function () {
-  getCountryData('nepal');
-});
+getCountryData('nepal').then((res) => console.log(res));
