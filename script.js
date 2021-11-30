@@ -37,7 +37,7 @@ const getCountryData = async function (country) {
 
     const neighbour = data[0].borders[0];
 
-    if (!neighbour) return 'No neighbour found';
+    if (!neighbour) return new Error('No neighbour found');
 
     const resNeighbour = await fetch(
       `https://restcountries.com/v2/alpha/${neighbour}`
@@ -46,8 +46,22 @@ const getCountryData = async function (country) {
 
     return `Successfully fetched data of ${country}`;
   } catch (error) {
-    console.log('ERROR');
+    console.log('error');
+    throw error;
   }
 };
 
-getCountryData('nepal').then((res) => console.log(res));
+// getCountryData('nepal')
+//   .then((res) => console.log(res))
+//   .catch((error) => console.log(error))
+//   .finally(() => console.log('All data fetched'));
+
+(async function () {
+  try {
+    const city = await getCountryData('nepal');
+    console.log(city);
+  } catch (error) {
+    console.log(error);
+  }
+  console.log('All data fetched');
+})();
